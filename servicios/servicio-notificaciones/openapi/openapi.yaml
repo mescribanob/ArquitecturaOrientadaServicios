@@ -1,0 +1,396 @@
+openapi: 3.0.0
+
+info:
+  version: 1.0.0
+  title: Taller de Coches - Subsistema de Envío de Notificaciones
+servers:
+  - url: http://127.0.0.1:80/api/v1
+
+paths:
+  /notificaciones/correo:
+    post:
+      summary: Envío de notificación de cambio de estado del trabajo por correo
+      description: Envía una notificación por correo al cliente cuando cambia el estado de un trabajo
+      tags:
+        - "Notificaciones 🔔"
+      requestBody:
+        $ref: '#/components/requestBodies/NotificacionRB'
+      responses:
+        '200':
+          $ref: './responses/NotificationResponse.yaml'
+        '400':
+          $ref: './responses/Response_400.yaml'
+        '422':
+          $ref: './responses/Response_422.yaml'
+    options:
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera Allow con la lista de métodos HTTP soportados (separados por comas).
+      tags: [ "Notificaciones 🔔" ]
+      responses:
+        '204':
+          description: 'cabecera Allow &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: './headers/Allow.yaml#/Allow'
+  /notificaciones/telefono:
+    post:
+      summary: Envío de notificación de cambio de estado del trabajo por teléfono
+      description: Envía una notificación por teléfono al cliente cuando cambia el estado de un trabajo
+      tags:
+        - "Notificaciones 🔔"
+      requestBody:
+        $ref: '#/components/requestBodies/NotificacionRB'
+      responses:
+        '200':
+          $ref: './responses/NotificationResponse.yaml'
+        '400':
+          $ref: './responses/Response_400.yaml'
+        '422':
+          $ref: './responses/Response_422.yaml'
+    options:
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera Allow con la lista de métodos HTTP soportados (separados por comas).
+      tags: [ "Notificaciones 🔔" ]
+      responses:
+        '204':
+          description: 'cabecera Allow &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: './headers/Allow.yaml#/Allow'
+
+  /notificaciones/masivas:
+    post:
+      summary: Envío de notificación masiva
+      description: Envía una notificación a todos los clientes con trabajos pendientes
+      tags:
+        - "Notificaciones 🔔"
+      requestBody:
+        $ref: '#/components/requestBodies/NotificacionMasivaRB'
+      responses:
+        '200':
+          $ref: './responses/NotificacionMasivaResponse.yaml'
+        '400':
+          $ref: './responses/Response_400.yaml'
+        '422':
+          $ref: './responses/Response_422.yaml'
+    options:
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera Allow con la lista de métodos HTTP soportados (separados por comas).
+      tags: [ "Notificaciones 🔔" ]
+      responses:
+        '204':
+          description: 'cabecera Allow &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: './headers/Allow.yaml#/Allow'
+
+  /notificaciones/{idNotificacion}:
+    get:
+      summary: Obtener una notificación
+      description: Obtiene una notificación mediante su id, así como los enlaces a los recursos relacionados
+      tags:
+        - "Notificaciones 🔔"
+      parameters:
+        - name: idNotificacion
+          in: path
+          required: true
+          description: Identificador único de la notificación
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Notificación obtenida correctamente
+          headers:
+            ETag:
+              $ref: './headers/ETag.yaml#/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/Notificacion.yaml#/Notificacion'
+        '400':
+          $ref: './responses/Response_400.yaml'
+        '404':
+          $ref: './responses/Response_404.yaml'
+    options:
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera Allow con la lista de métodos HTTP soportados (separados por comas).
+      tags: [ "Notificaciones 🔔" ]
+      responses:
+        '204':
+          description: 'cabecera Allow &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: './headers/Allow.yaml#/Allow'
+
+  /notificaciones/trabajo/{idTrabajo}:
+    get:
+      summary: Obtener notificaciones de un trabajo
+      description: Obtiene todas las notificaciones de un trabajo, así como los enlaces a los recursos relacionados
+      tags:
+        - "Notificaciones 🔔"
+      parameters:
+        - name: idTrabajo
+          in: path
+          required: true
+          description: Identificador único del trabajo
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: Paginación de las notificaciones del trabajo
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Notificaciones del trabajo obtenidas correctamente
+          headers:
+            ETag:
+              $ref: './headers/ETag.yaml#/ETag'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notificaciones:
+                    description: Array de notificaciones
+                    type: array
+                    items: 
+                      $ref: './schemas/Notificacion.yaml#/Notificacion'
+                  enlaces:
+                    description: Enlaces de paginación
+                    readOnly: true
+                    type: array
+                    properties:
+                      prevPage:
+                        $ref: './schemas/Enlace.yaml#/Enlace'
+                      nextPage:
+                        $ref: './schemas/Enlace.yaml#/Enlace'
+              examples:
+                notificaciones_idTrabajo_example:
+                  $ref: '#/components/examples/notificaciones_idTrabajo_example'
+        '400':
+          $ref: './responses/Response_400.yaml'
+        '404':
+          $ref: './responses/Response_404.yaml'
+    options:
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera Allow con la lista de métodos HTTP soportados (separados por comas).
+      tags: [ "Notificaciones 🔔" ]
+      responses:
+        '204':
+          description: 'cabecera Allow &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: './headers/Allow.yaml#/Allow'
+
+  /notificaciones/cliente/{idCliente}:
+    get:
+      summary: Obtener notificaciones de un cliente
+      description: Obtiene todas las notificaciones de un cliente, así como los enlaces a los recursos relacionados
+      tags:
+        - "Notificaciones 🔔"
+      parameters:
+        - name: idCliente
+          in: path
+          required: true
+          description: Identificador único del cliente
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: Paginación de las notificaciones del cliente
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Notificaciones del cliente obtenidas correctamente
+          headers:
+            ETag:
+              $ref: './headers/ETag.yaml#/ETag'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notificaciones:
+                    description: Array de notificaciones
+                    type: array
+                    items: 
+                      $ref: './schemas/Notificacion.yaml#/Notificacion'
+                  enlaces:
+                    description: Enlaces de paginación
+                    readOnly: true
+                    type: array
+                    properties:
+                      prevPage:
+                        $ref: './schemas/Enlace.yaml#/Enlace'
+                      nextPage:
+                        $ref: './schemas/Enlace.yaml#/Enlace'
+              examples:
+                notificaciones_idCliente_example:
+                  $ref: '#/components/examples/notificaciones_idCliente_example'
+        '400':
+          $ref: './responses/Response_400.yaml'
+        '404':
+          $ref: './responses/Response_404.yaml'
+    patch:
+      summary: Actualizar la suscripción a notificaciones
+      description: Actualiza la suscripción a notificaciones de un cliente
+      tags:
+        - "Notificaciones 🔔"
+      requestBody:
+        $ref: '#/components/requestBodies/SuscripcionNotificacionesRB'
+      responses:
+        '200':
+          description: Suscripción actualizada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/Cliente.yaml#/Cliente'
+        '400':
+          $ref: './responses/Response_400.yaml'
+        '404':
+          $ref: './responses/Response_404.yaml'
+        '422':
+          $ref: './responses/Response_422.yaml'
+    options:
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera Allow con la lista de métodos HTTP soportados (separados por comas).
+      tags: [ "Notificaciones 🔔" ]
+      responses:
+        '204':
+          description: 'cabecera Allow &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: './headers/Allow.yaml#/Allow'
+              
+components:
+  examples:
+    notificaciones_idTrabajo_example:
+      value:
+        notificaciones:
+          - idNotificacion: "1"
+            idTrabajo: "1"
+            mensaje: "El trabajo ha sido realizado"
+            fechaEnvio: "2023-04-10T17:51:00Z"
+            estado: "finalizado"
+            enlaces:
+              self: "http://127.0.0.1:80/api/v1/notificaciones/1"
+              trabajo: "http://127.0.0.1:80/api/v1/trabajos/1"
+          - idNotificacion: "2"
+            idTrabajo: "1"
+            mensaje: "El trabajo ha sido realizado"
+            fechaEnvio: "2023-04-10T17:51:00Z"
+            estado: "finalizado"
+            enlaces:
+              self: "http://127.0.0.1:80/api/v1/notificaciones/2"
+              trabajo: "http://127.0.0.1:80/api/v1/trabajos/1"
+        enlaces:
+          prevPage:
+            href: "https://example.com/api/v1/notificaciones/trabajo/1?page=2"
+            rel: "prevPage" 
+          nextPage:
+            href": "https://example.com/api/v1/notificaciones/trabajo/1?page=4"
+            rel: "nextPage"
+    
+    notificaciones_idCliente_example:
+      value:
+        notificaciones:
+          - idNotificacion: "1"
+            idTrabajo: "1"
+            mensaje: "El trabajo ha sido realizado"
+            fechaEnvio: "2023-04-10T17:51:00Z"
+            estado: "finalizado"
+            enlaces:
+              self: "http://127.0.0.1:80/api/v1/notificaciones/1"
+              trabajo: "http://127.0.0.1:80/api/v1/trabajos/1"
+          - idNotificacion: "2"
+            idTrabajo: "1"
+            mensaje: "El trabajo ha sido realizado"
+            fechaEnvio: "2023-04-10T17:51:00Z"
+            estado: "finalizado"
+            enlaces:
+              self: "http://127.0.0.1:80/api/v1/notificaciones/2"
+              trabajo: "http://127.0.0.1:80/api/v1/trabajos/1"
+        enlaces:
+          prevPage:
+            href: "https://example.com/api/v1/notificaciones/cliente/1?page=2"
+            rel: "prevPage" 
+          nextPage:
+            href": "https://example.com/api/v1/notificaciones/cliente/1?page=4"
+            rel: "nextPage"
+  
+  requestBodies:
+    NotificacionRB:
+      description: Datos de la notificación a crear
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              idTrabajo:
+                type: string
+                description: ID del trabajo al que está relacionada la notificación
+              mensaje:
+                type: string
+                description: Mensaje de la notificación
+            required:
+              - idTrabajo
+              - mensaje
+          example:
+            idTrabajo: "1"
+            mensaje: "El trabajo ha sido realizado"
+    
+    NotificacionMasivaRB:
+      description: Datos de una notificación masiva
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              mensaje:
+                type: string
+                description: Mensaje de la notificación
+              fechaProgramada: 
+                type: string
+                format: date-time
+            required:
+              - mensaje
+          example:
+            mensaje: "Desde el lunes 11 de abril hasta el jueves 13 todos los talleres permanecerán cerrados."
+    
+    SuscripcionNotificacionesRB:
+      description: Datos de la suscripción a las notificaciones 
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              idCliente:
+                type: string
+                description: Id del cliente
+              suscripcion:
+                type: boolean
+                description: indica si un usuario está suscrito a las notificaciones
+          example:
+            idCliente: "1"
+            suscripcion: false
+  
+  schemas:
+    Cliente:
+      $ref: "./schemas/Cliente.yaml#/Cliente"
+    Enlace:
+      $ref: "./schemas/Enlace.yaml#/Enlace"
+    Notificacion:
+      $ref: "./schemas/Notificacion.yaml#/Notificacion"
+    NotificacionMasiva:
+      $ref: "./schemas/NotificacionMasiva.yaml#/NotificacionMasiva"
+    Trabajo:
+      $ref: "./schemas/Trabajo.yaml#/Trabajo"
+    Vehiculo:
+      $ref: "./schemas/Vehiculo.yaml#/Vehiculo"

@@ -1,0 +1,13 @@
+description: "`NOT FOUND`: resource not found"
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/HTTP_Problem.yaml#/HTTP_Problem'
+    examples:
+      response-http-404:
+        value:
+          type: https://httpstatuses.com/404
+          title: NOT FOUND
+          status: 404
+          detail: El identificador no existe
+          instance: about:blank

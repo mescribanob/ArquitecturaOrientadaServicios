@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+      
+  api:
+    build: ./api-recambios
+    image: api-recambios
+    container_name: recambios-api
+    ports:
+      - 4000:8000
+    command: uvicorn main:api_recambios --host 0.0.0.0 --reload
+    volumes:
+      - ./api-recambios:/usr/src/api/
+      - venv:/usr/src/api/.venv
+    depends_on:
+      - mongo
+    networks:
+      - network-recambios
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: recambios-db
+    ports:
+    - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: taller
+    volumes:
+      - mongo-recambios:/data/db
+      - ./database-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - network-recambios
+
+volumes:
+  venv:
+  mongo-recambios:
+
+networks:
+  network-recambios:

@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+    mock_backend:
+        image: stoplight/prism:4
+        container_name: p1_mock
+        command: mock --cors -h 0.0.0.0 "/aos/openapi.yaml"
+        ports:
+          - "80:4010"
+        volumes:
+            - ./openapi:/aos:ro
+
+    frontend:
+        image: swaggerapi/swagger-ui:latest
+        container_name: p1_ui
+        ports:
+            - "8000:8080"
+        environment:
+            SWAGGER_JSON: /aos/openapi.yaml
+        volumes:
+            - ./openapi:/aos:ro

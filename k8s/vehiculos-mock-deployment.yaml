@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: vehiculos-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vehiculos-backend
+  template:
+    metadata:
+      labels:
+        app: vehiculos-backend
+    spec:
+      containers:
+        - name: vehiculos-backend
+          image: stoplight/prism:4
+          command: ["mock", "--cors", "-h", "0.0.0.0", "/vehiculos/openapi.yaml"]
+          volumeMounts:
+            - name: vehiculos-mock-volumen
+              mountPath: /vehiculos
+              readOnly: true
+      volumes:
+        - name: vehiculos-mock-volumen
+          persistentVolumeClaim:
+            claimName: vehiculos-mock-volumen
+            readOnly: true

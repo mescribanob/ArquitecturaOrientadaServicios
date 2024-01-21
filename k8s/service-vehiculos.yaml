@@ -1,0 +1,43 @@
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: vehiculos
+spec:
+  selector:
+    app: vehiculos
+  ports:
+    - port: 8020
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: vehiculos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vehiculos
+  template:
+    metadata:
+      labels:
+        app: vehiculos
+    spec:
+      containers:
+        - name: vehiculos-fronted
+          image: swaggerapi/swagger-ui:latest
+          ports:
+            - containerPort: 8080
+          env: 
+            - name: SWAGGER_JSON
+              value: /vehiculos/openapi.yaml
+          volumeMounts:
+            - name: vehiculos-frontend-volumen
+              mountPath: /vehiculos
+              readOnly: true
+      volumes:
+        - name: vehiculos-frontend-volumen
+          persistentVolumeClaim:
+            claimName: vehiculos-frontend-volumen
+            readOnly: true

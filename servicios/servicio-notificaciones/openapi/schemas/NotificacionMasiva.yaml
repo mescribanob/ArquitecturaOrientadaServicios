@@ -1,0 +1,14 @@
+NotificacionMasiva:
+  type: object
+  properties:
+    idNotificacion:
+      type: string
+    mensaje:
+      type: string
+    fechaEnvio:
+      type: string
+      format: date-time
+  example:
+    idNotificacion: "1"
+    mensaje: "Desde el lunes 11 de abril hasta el jueves 13 todos los talleres permanecerán cerrados."     
+    fechaEnvio: "2023-04-13T16:30:10.989Z"

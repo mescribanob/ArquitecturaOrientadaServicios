@@ -1,0 +1,46 @@
+#responses:
+Response_400:
+  description: '`BAD REQUEST` El identificador único ya existe.'
+  content:
+    application/problem+json:
+      schema:
+        $ref: 'schemas.yaml#/HTTP_Problem'
+      examples:
+        response-http-400:
+          $ref: 'examples.yaml#/response-http-400'
+Response_404:
+  description: '`NOT FOUND`: recurso no disponible'
+  content:
+    application/problem+json:
+      schema:
+        $ref: 'schemas.yaml#/HTTP_Problem'
+      examples:
+        response-http-404:
+          $ref: 'examples.yaml#/response-http-404'
+Response_409:
+  description: '`CONFLICT`: el recurso no reúne las condiciones adecuadas'
+  content:
+    application/problem+json:
+      schema:
+        $ref: 'schemas.yaml#/HTTP_Problem'
+      examples:
+        response-http-404:
+          $ref: 'examples.yaml#/response-http-409'
+Response_412:
+  description: '`PRECONDITION FAILED`: El ETag proporcionado no está actualizado'
+  content:
+    application/problem+json:
+      schema:
+        $ref: 'schemas.yaml#/HTTP_Problem'
+      examples:
+        response-http-412:
+          $ref: 'examples.yaml#/response-http-412'
+Response_422:
+  description: '`UNPROCESSABLE ENTITY` Falta alguno de los atributos obligatorios o son incorrectos.'
+  content:
+    application/problem+json:
+      schema:
+        $ref: 'schemas.yaml#/HTTP_Problem'
+      examples:
+        response-http-422:
+          $ref: 'examples.yaml#/response-http-422'

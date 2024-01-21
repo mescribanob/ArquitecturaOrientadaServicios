@@ -1,0 +1,38 @@
+Notificacion:
+  type: object
+  properties:
+    idNotificacion:
+      type: string
+    idTrabajo:
+      type: string
+    mensaje:
+      type: string
+    fechaEnvio:
+      type: string
+      format: date-time
+    estado:
+      type: string
+    enlaces:
+      type: object
+      properties:
+        rel:
+          type: string
+        href:
+          type: string
+  required:
+    - idNotificacion
+    - idTrabajo
+    - mensaje
+    - fechaEnvio
+    - estado
+  example:
+    idNotificacion: "1"
+    idTrabajo: "1"
+    mensaje: "El trabajo ha sido realizado"
+    fechaEnvio: "2023-04-10T17:51:00Z"
+    estado: "finalizado"
+    enlaces:
+      - rel: "self"
+        href: "http://127.0.0.1:80/api/v1/notificaciones/1"
+      - rel: "trabajo"
+        href: "http://127.0.0.1:80/api/v1/trabajos/1"

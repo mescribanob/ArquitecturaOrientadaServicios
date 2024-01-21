@@ -1,0 +1,17 @@
+Enlace:
+  description: Enlace de relación
+  title: 'Enlace'
+  type: object
+  properties:
+    href:
+      description: URL del enlace
+      type: string
+      format: uri
+      x-faker: internet.url
+    rel:
+      description: "Relación del recurso enlazado con el actual. Contiene una lista de tipos de relaciones separados por espacio."
+      type: string
+      x-faker: lorem.words
+  example:
+    href: https://www.example.com/path/resource
+    rel: relAction1 relAction2

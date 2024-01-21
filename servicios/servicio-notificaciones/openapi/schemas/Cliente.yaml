@@ -1,0 +1,33 @@
+Cliente:
+  type: object
+  properties:
+    idCliente:
+      type: string
+    nombre: 
+      type: string
+    apellido: 
+      type: string
+    telefono: 
+      type: string
+    email: 
+      type: string
+    direccion: 
+      type: string
+    recibeNotificaciones:
+      type: boolean
+  required:
+    - idCliente
+    - nombre
+    - apellido
+    - telefono
+    - email
+    - direccion
+    - recibeNotificaciones
+  example:
+    idCliente: "7y2f5g28974y"
+    nombre: "Pepe"
+    apellido: "Pérez"
+    email: "pepeperez@example.com"
+    telefono: "689374623"
+    direccion: "Calle Alcalá 100"
+    recibeNotificaciones: true

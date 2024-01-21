@@ -1,0 +1,13 @@
+description: "Unprocessable Entity"
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/HTTP_Problem.yaml#/HTTP_Problem'
+    examples:
+     response-http-422:
+      value:
+        type: https://httpstatuses.com/422
+        title: UNPROCESSABLE ENTITY
+        status: 422
+        detail: Missing field
+        instance: about:blank

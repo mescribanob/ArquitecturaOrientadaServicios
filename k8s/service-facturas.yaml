@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service 
+metadata:
+  name: facturas
+spec:
+  selector: 
+    app: facturas
+  ports:
+    - port: 8050
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: facturas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: facturas
+  template:
+    metadata:
+      labels:
+        app: facturas
+    spec:
+      containers:
+        - name: facturas-fronted
+          image: swaggerapi/swagger-ui:latest
+          ports:
+            - containerPort: 8080
+          env: 
+            - name: SWAGGER_JSON
+              value: /facturas/openapi.yaml
+          volumeMounts:
+            - name: facturas-frontend-volumen
+              mountPath: /facturas
+              readOnly: true
+      volumes:
+        - name: facturas-frontend-volumen
+          persistentVolumeClaim:
+            claimName: facturas-frontend-volumen
+            readOnly: true

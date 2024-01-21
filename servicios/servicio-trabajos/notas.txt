@@ -1,0 +1,88 @@
+Recursos que se van a gestionar:
+	-Trabajo diario
+		-IdTrabajo: Int
+		-TipoTrabajo: Int
+		-DescripcionTrabajo: String
+		-MotivoTrabajo: String
+		-FechaInicio: Date
+		-HorasDedicadas: Float
+		-FechaFin: Date
+		-RecursosNecesarios: Int[] (id’s de recursos)
+		-EstadoTrabajo: EstadoTrabajo(Enum)
+		-VINCoche: String
+
+	-Tipo de trabajo:
+		-IdTipoTrabajo: Int
+		-NombreTrabajo: String
+		-DescripcionTipoTrabajo: String
+
+	-EstadoTrabajo:
+		-CREADO
+		-PLANIFICADO
+		-INICIADO
+		-TERMINADO
+
+—----------------
+
+posibles paths:
+
+server -> http://127.0.0.1:80/api/v1
+
+api/v1/activityTypes :
+	-OPTIONS -> Todas las operaciones HTTP posibles para este path
+	-GET -> Obtiene todas los tipos de actividades
+	-POST -> Añade un nuevo tipo de actividad
+
+api/v1/activityTypes{IdTipoTrabajo} :
+	-OPTIONS -> Todas las operaciones posibles HTTP para este path
+	-GET -> Obtiene el tipo de actividad con el id IdTipoTrabajo
+	-DELETE -> Elimina el tipo de actividad con el id IdTipoTrabajo
+	-PUT -> Edita el tipo de actividad con el id IdTipoTrabajo
+
+api/v1/activities :
+	-OPTIONS -> Todas las operaciones HTTP posibles para este path
+	-GET -> Obtiene todas las actividades
+	-POST -> Añade nueva actividad
+
+api/v1/activities{IdTrabajo} :
+	-OPTIONS -> Todas las operaciones posibles HTTP para este path
+	-GET -> Obtiene la actividad con el id IdTrabajo
+	-DELETE -> Elimina la actividad con el id IdTrabajo
+	-PUT -> Edita la actividad con el id IdTrabajo
+
+api/v1/carActivities{VINCoche} :
+-OPTIONS -> Todas las operaciones posibles HTTP para este path
+	-GET -> Obtiene las actividades asociadas a un vehículo con VIN VINCoche
+
+api/v1/activiyStates{ActivityState}:
+	-OPTIONS -> Todas las operaciones posibles HTTP para este path
+	-GET -> Obtiene las actividades que tengan su estado de trabajo asociado al valor ActivityState
+
+api/v1/resourcesUsed{IdRecurso} :
+	-OPTIONS -> Todas las operaciones HTTP posibles para este path
+	-GET -> Obtiene todas las actividades donde se utiliza dicho recurso con IdRecurso
+
+
+—------------------
+
+Códigos de callback:
+
+200 -> Recurso obtenido
+201 -> Recurso creado/eliminado
+404 -> No existe/se encuentra el recurso
+
+justificaciones:
+		-DescripcionTrabajo: String
+Esto hace referencia a que un tipo de trabajo es más general que esta descripcion, ya que en esta se puede escribir algo más especifico, ejemplo: la descripcion de un tipo de trabajo sería Cambio de bugías, mientras que la descripcion del trabajo diario es cambio de la bugía 4 debido a un exceso de corrosión …
+
+		-TipoTrabajo y Actividad diaria
+Una actividad diaria hace referencia a un tipo de trabajo concreto.
+
+		-MotivoTrabajo: String
+Un trabajo tiene un motivo de dicho trabajo, para poder llevar una trazabilidad del motivo de la entrega del vehículo a taller, y los trabajos realizados sobre dicho vehículo.
+
+		-FechaInicio:Date, FechaFin: Date, HorasDedicadas: Float
+Una actividad diaria comienza cuando el vehículo es dejado en el taller, y terminará una vez el cliente recoja dicho vehículo. Pero serán las horas dedicadas las que marquen el tiempo que ha sido necesario para completar la actividad.
+
+        -No uso de ClienteId
+No debería conocer el taller el ClienteId ya que sólo trabaja con coches, de la misma manera que no conoce a los proveedores de los recursos, solo a los recursos. Para poder facilitar las notificaciones ya se ha creado un endpoint que facilita la información de todas las actividades de un coche, dado el VIN.

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: clientes-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clientes-backend
+  template:
+    metadata:
+      labels:
+        app: clientes-backend
+    spec:
+      containers:
+        - name: clientes-backend
+          image: stoplight/prism:4
+          command: ["mock", "--cors", "-h", "0.0.0.0", "/clientes/openapi.yaml"]
+          volumeMounts:
+            - name: clientes-mock-volumen
+              mountPath: /clientes
+              readOnly: true
+      volumes:
+        - name: clientes-mock-volumen
+          persistentVolumeClaim:
+            claimName: clientes-mock-volumen
+            readOnly: true

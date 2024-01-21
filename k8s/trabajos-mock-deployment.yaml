@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: trabajos-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trabajos-backend
+  template:
+    metadata:
+      labels:
+        app: trabajos-backend
+    spec:
+      containers:
+        - name: trabajos-backend
+          image: stoplight/prism:4
+          command: ["mock", "--cors", "-h", "0.0.0.0", "/trabajos/openapi.yaml"]
+          volumeMounts:
+            - name: trabajos-mock-volumen
+              mountPath: /trabajos
+              readOnly: true
+      volumes:
+        - name: trabajos-mock-volumen
+          persistentVolumeClaim:
+            claimName: trabajos-mock-volumen
+            readOnly: true

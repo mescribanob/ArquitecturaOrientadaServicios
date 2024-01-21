@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service 
+metadata:
+  name: notificaciones
+spec:
+  selector: 
+    app: notificaciones
+  ports:
+    - port: 8040
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: notificaciones
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notificaciones
+  template:
+    metadata:
+      labels:
+        app: notificaciones
+    spec:
+      containers:
+        - name: notificaciones-fronted
+          image: swaggerapi/swagger-ui:latest
+          ports:
+            - containerPort: 8080
+          env: 
+            - name: SWAGGER_JSON
+              value: /notificaciones/openapi.yaml
+          volumeMounts:
+            - name: notificaciones-frontend-volumen
+              mountPath: /notificaciones
+              readOnly: true
+      volumes:
+        - name: notificaciones-frontend-volumen
+          persistentVolumeClaim:
+            claimName: notificaciones-frontend-volumen
+            readOnly: true

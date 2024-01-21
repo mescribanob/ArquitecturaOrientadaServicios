@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: recambios-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recambios-backend
+  template:
+    metadata:
+      labels:
+        app: recambios-backend
+    spec:
+      containers:
+        - name: recambios-backend
+          image: alejandrochirinos/recambios:latest
+          command: ["uvicorn", "main:api_recambios", "--host", "0.0.0.0", "--reload"]
+        - name: recambios-db
+          image: mongo
+          volumeMounts:
+            - name: recambios-db-volumen
+              mountPath: /data/db
+      volumes:
+        - name: recambios-db-volumen
+          persistentVolumeClaim:
+            claimName: recambios-db-volumen

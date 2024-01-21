@@ -1,0 +1,81 @@
+
+parameters:
+  - $ref: 'parameters.yaml#/clienteId'
+options:
+  summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+  description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados (separados por comas).
+  operationId: cliente_options
+  tags: [ 'Cliente' ]
+  responses:
+    '204':
+      description: 'cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+      headers:
+        Allow:
+          $ref: 'headers.yaml#/Allow'
+get:
+  summary: Obtiene un cliente identificado por `clienteId`
+  description: |
+    La siguiente tabla define los códigos de estado que puede devolver este endpoint
+    
+    | Status Code | Descripción | Motivo                             |
+    | ------------| ------------| -----------------------------------|
+    | **200**     | OK          | Si el cliente existe               |
+    | **404**     | NOT FOUND   | Si no existe el cliente            |
+  operationId: cliente_get
+  tags: [ 'Cliente' ]
+  responses:
+    '200':
+      description: Cliente
+      headers:
+        ETag:
+          $ref: 'headers.yaml#/ETag'
+      content:
+        application/json:
+          schema:
+            $ref: 'schemas.yaml#/Cliente'
+    '404':
+      $ref: 'responses.yaml#/Response_404'
+delete:
+  summary: Elimina el cliente identificada por `clienteId`
+  description: |
+    La siguiente tabla define los códigos de estado que puede devolver este endpoint
+    
+    | Status Code      | Descripción | Motivo                                    |
+    | ---------------- | ------------| ------------------------------------------|
+    | **204**          | NO CONTENT  | El cliente existía y ha sido eliminada    |
+    | **404**          | NOT FOUND   | Si el cliente no existe                   |
+  operationId: cliente_delete
+  tags: [ 'Cliente' ]
+  responses:
+    '204':
+      description: Cliente eliminada &lt;Cuerpo de la respuesta vacío&gt;
+    '404':
+      $ref: 'responses.yaml#/Response_404'
+put:
+  tags: [ 'Cliente' ]
+  summary: Modifica el cliente identificado por `clienteId`.
+  description:  |
+    La siguiente tabla define los códigos de estado que puede devolver este endpoint
+
+    | Status Code | Descripción         | Motivo                                        |
+    | ------------| --------------------| ----------------------------------------------|
+    | **209**     | CONTENT RETURNED    | El cliente existía y ha sido actualizada      |
+    | **404**     | NOT FOUND           | Si el cliente no existe                       |
+    | **412**     | PRECONDITION FAILED | Si el Tag proporcionado no está actualizado   |
+    | **422**     | UNPROCESSABLE ENTITY| Valor no permitido en alguno de los attributos|
+  operationId: cliente_put
+  parameters:
+    - $ref: 'parameters.yaml#/ifMatchParam'
+  responses:
+    '209':
+      description: '`CONTENT RETURNED`: el cliente ha sido actualizado'
+      content:
+        application/json:
+          schema:
+            $ref: 'schemas.yaml#/Cliente'
+    '404':
+      $ref: 'responses.yaml#/Response_404'
+    '412':
+      $ref: 'responses.yaml#/Response_412'
+    '422':
+      $ref: 'responses.yaml#/Response_422'

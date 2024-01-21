@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: facturas-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: facturas-backend
+  template:
+    metadata:
+      labels:
+        app: facturas-backend
+    spec:
+      containers:
+        - name: facturas-backend
+          image: stoplight/prism:4
+          command: ["mock", "--cors", "-h", "0.0.0.0", "/facturas/openapi.yaml"]
+          volumeMounts:
+            - name: facturas-mock-volumen
+              mountPath: /facturas
+              readOnly: true
+      volumes:
+        - name: facturas-mock-volumen
+          persistentVolumeClaim:
+            claimName: facturas-mock-volumen
+            readOnly: true

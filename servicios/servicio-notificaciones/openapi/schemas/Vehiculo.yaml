@@ -1,0 +1,30 @@
+Vehiculo:
+  type: object
+  properties:
+    vin:
+      type: string
+    marca:
+      type: string
+    modelo:
+      type: string
+    year:
+      type: integer
+    cliente:
+      type: integer
+  required:
+    - vin
+    - marca
+    - modelo
+    - year
+    - cliente
+  example:
+    vin: "1HGCM82633A004352"
+    marca: "Mercedes"
+    modelo: "Clase A"
+    year: 2023
+    cliente:
+      idCliente: "7y2f5g28974y"
+      nombre: "Pepe"
+      apellido: "Pérez"
+      correo: "pepeperez@example.com"
+      telefono: "689374623"

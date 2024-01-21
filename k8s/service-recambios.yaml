@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service 
+metadata:
+  name: recambios
+spec:
+  selector: 
+    app: recambios
+  ports:
+    - port: 8060
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: recambios
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recambios
+  template:
+    metadata:
+      labels:
+        app: recambios
+    spec:
+      containers:
+        - name: recambios-fronted
+          image: swaggerapi/swagger-ui:latest
+          ports:
+            - containerPort: 8080
+          env: 
+            - name: SWAGGER_JSON
+              value: /recambios/openapi.yaml
+          volumeMounts:
+            - name: recambios-frontend-volumen
+              mountPath: /recambios
+              readOnly: true
+      volumes:
+        - name: recambios-frontend-volumen
+          persistentVolumeClaim:
+            claimName: recambios-frontend-volumen
+            readOnly: true

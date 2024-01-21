@@ -1,0 +1,14 @@
+description: "Bad Request"
+content:
+  application/problem+json:
+    schema:
+      $ref: '../schemas/HTTP_Problem.yaml#/HTTP_Problem'
+    examples:
+     response-http-400:
+      value:
+        type: https://httpstatuses.com/400
+        title: UNPROCESSABLE ENTITY
+        status: 400
+        detail: Malformed Syntax
+        instance: about:blank
+         

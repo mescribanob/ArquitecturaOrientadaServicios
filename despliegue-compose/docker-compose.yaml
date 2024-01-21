@@ -1,0 +1,194 @@
+version: "3"
+
+services:
+
+  # Proxy que redirige las requests a los mocks
+  proxy:
+    image: caddy:latest
+    container_name: proxy
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
+    ports:
+      - "80:80"
+    depends_on:
+      - clientes_mock_backend
+      - vehiculos_mock_backend
+      - trabajos_mock_backend
+      - notificaciones_mock_backend
+      - facturas_mock_backend
+      - recambios_backend
+      - recambios_db
+      - logs_mock_backend
+    networks:
+      - clientes_net
+      - vehiculos_net
+      - trabajos_net
+      - notificaciones_net
+      - facturas_net
+      - recambios_net
+      - logs_net
+
+  # Subsistema 1: Clientes
+  clientes_mock_backend:
+    image: stoplight/prism:4
+    container_name: clientes-mock
+    command: mock --cors -h 0.0.0.0 "/clientes/openapi.yaml"
+    volumes:
+      - ../servicios/servicio-clientes/openapi:/clientes:ro
+    networks:
+      - clientes_net
+
+  clientes_frontend:
+    image: swaggerapi/swagger-ui:latest
+    container_name: clientes-ui
+    ports:
+     - "8010:8080"
+    environment:
+      SWAGGER_JSON: /clientes/openapi.yaml
+    volumes:
+     - ../servicios/servicio-clientes/openapi:/clientes:ro
+
+  # Subsistema 2: Vehiculos
+  vehiculos_mock_backend:
+    image: stoplight/prism:4
+    container_name: vehiculos-mock
+    command: mock --cors -h 0.0.0.0 "/vehiculos/openapi.yaml"
+    volumes:
+      - ../servicios/servicio-vehiculos/openapi:/vehiculos:ro
+    networks:
+      - vehiculos_net
+
+  vehiculos_frontend:
+    image: swaggerapi/swagger-ui:latest
+    container_name: vehiculos-ui
+    ports:
+     - "8020:8080"
+    environment:
+      SWAGGER_JSON: /vehiculos/openapi.yaml
+    volumes:
+     - ../servicios/servicio-vehiculos/openapi:/vehiculos:ro
+
+  # Subsistema 3: Trabajos
+  trabajos_mock_backend:
+    image: stoplight/prism:4
+    container_name: trabajos-mock
+    command: mock --cors -h 0.0.0.0 "/trabajos/openapi.yaml"
+    volumes:
+      - ../servicios/servicio-trabajos/openapi:/trabajos:ro
+    networks:
+      - trabajos_net
+
+  trabajos_frontend:
+    image: swaggerapi/swagger-ui:latest
+    container_name: trabajos-ui
+    ports:
+     - "8030:8080"
+    environment:
+      SWAGGER_JSON: /trabajos/openapi.yaml
+    volumes:
+     - ../servicios/servicio-trabajos/openapi:/trabajos:ro
+
+  # Subsistema 4: Notificaciones
+  notificaciones_mock_backend:
+    image: stoplight/prism:4
+    container_name: notificaciones-mock
+    command: mock --cors -h 0.0.0.0 "/notificaciones/openapi.yaml"
+    volumes:
+      - ../servicios/servicio-notificaciones/openapi:/notificaciones:ro
+    networks:
+      - notificaciones_net
+
+  notificaciones_frontend:
+    image: swaggerapi/swagger-ui:latest
+    container_name: notificaciones-ui
+    ports:
+      - "8040:8080"
+    environment:
+      SWAGGER_JSON: /notificaciones/openapi.yaml
+    volumes:
+      - ../servicios/servicio-notificaciones/openapi:/notificaciones:ro
+
+  # Subsistema 5: Facturas
+  facturas_mock_backend:
+    image: stoplight/prism:4
+    container_name: facturas-mock
+    command: mock --cors -h 0.0.0.0 "/facturas/openapi.yaml"
+    volumes:
+      - ../servicios/servicio-facturas/openapi:/facturas:ro
+    networks:
+      - facturas_net
+
+  facturas_frontend:
+    image: swaggerapi/swagger-ui:latest
+    container_name: facturas-ui
+    ports:
+     - "8050:8080"
+    environment:
+      SWAGGER_JSON: /facturas/openapi.yaml
+    volumes:
+     - ../servicios/servicio-facturas/openapi:/facturas:ro
+
+  # Subsistema 6: Recambios (Implementación)
+  recambios_backend:
+    image: alejandrochirinos/recambios:latest
+    container_name: recambios-api
+    command: uvicorn main:api_recambios --host 0.0.0.0 --reload
+    ports:
+     - "4060:8000"
+    networks:
+      - recambios_net
+    depends_on:
+      - recambios_db
+
+  recambios_db:
+    image: mongo
+    restart: always
+    container_name: recambios-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: taller
+    volumes:
+      - mongo_recambios:/data/db
+      # El volumen de abajo no es necesario si la BD ya tiene información,
+      # es decir, se puede desplegar todo el servicio de recambios sin
+      # necesidad de tenerlo descargado en local.
+      - ../servicios/implementacion-recambios/database-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - recambios_net
+
+  # Subsistema 7: Logs
+  logs_mock_backend:
+    image: stoplight/prism:4
+    container_name: logs-mock
+    command: mock --cors -h 0.0.0.0 "/logs/openapi.yml"
+    volumes:
+      - ../servicios/servicio-logs/openapi:/logs:ro
+    networks:
+      - logs_net
+
+  logs_frontend:
+    image: swaggerapi/swagger-ui:latest
+    container_name: logs-ui
+    ports:
+     - "8070:8080"
+    environment:
+      SWAGGER_JSON: /logs/openapi.yml
+    volumes:
+     - ../servicios/servicio-logs/openapi:/logs:ro
+
+volumes:
+  venv_recambios_api:
+  mongo_recambios:
+
+networks:
+  clientes_net:
+  vehiculos_net:
+  trabajos_net:
+  notificaciones_net:
+  facturas_net:
+  recambios_net:
+  logs_net:
+
+  

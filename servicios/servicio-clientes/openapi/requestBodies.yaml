@@ -1,0 +1,26 @@
+#requestBodies:
+clienteRB:
+  description: Información de los Clientes
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required: [ id, dni ]
+        properties:
+          id:
+            $ref: 'schemas.yaml#/Id_Cliente'
+          dni:
+            $ref: 'schemas.yaml#/DNI_Cliente'
+          nombre:
+            $ref: 'schemas.yaml#/Nombre_Cliente'
+          apellidos:
+            $ref: 'schemas.yaml#/Apellidos_Cliente'
+          direccion:
+            $ref: 'schemas.yaml#/Direccion_Cliente'
+          cuenta_bancaria:
+            $ref: 'schemas.yaml#/CuentaBancaria_Cliente'
+          telefono:
+            $ref: 'schemas.yaml#/Telefono'
+          mail:
+            $ref: 'schemas.yaml#/Mail'

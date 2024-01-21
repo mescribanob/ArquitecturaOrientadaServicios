@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: logs-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logs-backend
+  template:
+    metadata:
+      labels:
+        app: logs-backend
+    spec:
+      containers:
+        - name: logs-backend
+          image: stoplight/prism:4
+          command: ["mock", "--cors", "-h", "0.0.0.0", "/logs/openapi.yaml"]
+          volumeMounts:
+            - name: logs-mock-volumen
+              mountPath: /logs
+              readOnly: true
+      volumes:
+        - name: logs-mock-volumen
+          persistentVolumeClaim:
+            claimName: logs-mock-volumen
+            readOnly: true

@@ -1,0 +1,112 @@
+###
+# CGET 200
+GET http://127.0.0.1:80/api/v1/logs
+Accept: application/json
+
+###
+# GET ERROR 422 (validación parámetros)
+GET http://127.0.0.1:80/api/v1/logs/abcd
+Accept: application/json
+
+###
+# GET 200
+GET http://127.0.0.1:80/api/v1/logs/P01-003-C
+Accept: application/json
+
+###
+# DELETE 204 (No Content)
+DELETE http://127.0.0.1:80/api/v1/logs/P01-003-C
+Accept: application/json
+
+###
+# POST 201
+POST http://127.0.0.1:80/api/v1/logs
+Content-Type: application/json
+
+{
+  "id": "P01-003-C"
+  "descripcion_evento": "Revision vehiculo", 
+  "subsistema": 1, 
+  "prioridad": 2, 
+  "fecha": "01-01-2001",
+  "usuario":"Miguel Galisteo" 
+} 
+
+###
+# COPTIONS 204
+OPTIONS http://127.0.0.1:80/api/v1/logs
+Content-Type: application/json
+
+###
+# OPTIONS 204
+OPTIONS http://127.0.0.1:80/api/v1/logs/P01-003-C
+Content-Type: application/json
+
+###
+# POST 201 (dinámico)
+POST http://127.0.0.1:80/api/v1/logs
+Prefer: dynamic=true
+Content-Type: application/json
+
+{
+  "id": "P01-003-C"
+  "descripcion_evento": "Revision vehiculo", 
+  "subsistema": 1, 
+  "prioridad": 2, 
+  "fecha": "01-01-2001",
+  "usuario":"Miguel Galisteo" 
+} 
+
+###
+# PUT 422 (dinámico) - Falta cabecera If-Match
+PUT http://127.0.0.1:80/api/v1/logs/P23-019-E
+Prefer: dynamic=true
+Content-Type: application/json
+
+{ 
+  "descripcion_evento": "Revision vehiculo", 
+  "prioridad": 3 
+}
+
+###
+# PUT 209 (dinámico)
+PUT http://127.0.0.1:80/api/v1/logs/P23-019-E
+If-Match: abcde12345
+Prefer: dynamic=true
+Content-Type: application/json
+
+{ 
+  "descripcion_evento": "Revision vehiculo", 
+  "prioridad": 0 
+}
+
+###
+# CGET 404
+GET http://127.0.0.1:80/api/v1/logs
+Prefer: code=404
+
+###
+# POST 422
+POST http://127.0.0.1:80/api/v1/logs
+Content-Type: application/json
+
+{
+  "XXXid": "P01-003-A"
+  "descripcion_evento": "Revision vehiculo", 
+  "subsistema": 1, 
+  "prioridad": 2, 
+  "fecha": "01-01-2001",
+  "usuario":"Miguel Galisteo" 
+} 
+
+###
+# PUT 404 (dinámico) - Not Found
+PUT http://127.0.0.1:80/api/v1/logs/P01-001-A
+If-Match: a1b2c3d4e5f6
+Prefer: code=404
+Content-Type: application/json
+
+{ 
+  "descripcion_evento": "Revision vehiculo", 
+  "prioridad": 1 
+}

@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service 
+metadata:
+  name: clientes
+spec:
+  selector: 
+    app: clientes
+  ports:
+    - port: 8010
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: clientes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clientes
+  template:
+    metadata:
+      labels:
+        app: clientes
+    spec:
+      containers:
+        - name: clientes-fronted
+          image: swaggerapi/swagger-ui:latest
+          ports:
+            - containerPort: 8080
+          env: 
+            - name: SWAGGER_JSON
+              value: /clientes/openapi.yaml
+          volumeMounts:
+            - name: clientes-frontend-volumen
+              mountPath: /clientes
+              readOnly: true
+      volumes:
+        - name: clientes-frontend-volumen
+          persistentVolumeClaim:
+            claimName: clientes-frontend-volumen
+            readOnly: true

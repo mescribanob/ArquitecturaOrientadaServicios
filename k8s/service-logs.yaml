@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service 
+metadata:
+  name: logs
+spec:
+  selector: 
+    app: logs
+  ports:
+    - port: 8070
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: logs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logs
+  template:
+    metadata:
+      labels:
+        app: logs
+    spec:
+      containers:
+        - name: logs-fronted
+          image: swaggerapi/swagger-ui:latest
+          ports:
+            - containerPort: 8080
+          env: 
+            - name: SWAGGER_JSON
+              value: /logs/openapi.yaml
+          volumeMounts:
+            - name: logs-frontend-volumen
+              mountPath: /logs
+              readOnly: true
+      volumes:
+        - name: logs-frontend-volumen
+          persistentVolumeClaim:
+            claimName: logs-frontend-volumen
+            readOnly: true

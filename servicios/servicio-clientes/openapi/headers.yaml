@@ -1,0 +1,21 @@
+#headers:
+ETag:
+  description: "Entity Tag (identificador único proporcionado para validación de caché)"
+  schema:
+    type: string
+    pattern: "[0-9a-f]*"
+    example:
+      33a64df551425fcc
+Allow:
+  description: Lista de métodos HTTP soportados
+  schema:
+    type: string
+  example: GET, DELETE, PUT, OPTIONS
+Location:
+  description: '`URI` del nuevo recurso'
+  schema:
+    type: string
+    format: uri
+    x-faker: internet.url
+    example:
+      https://example.com/api/v1/plataformas/P01-001-A

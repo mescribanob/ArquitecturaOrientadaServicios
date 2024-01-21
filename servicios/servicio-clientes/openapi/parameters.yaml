@@ -1,0 +1,46 @@
+#parameters:
+clienteId:
+  name: cliente_id
+  in: path
+  description: Identificador único del Cliente
+  required: true
+  schema:
+    $ref: 'schemas.yaml#/Id_Cliente'
+ifMatchParam:
+  name: If-Match
+  in: header
+  description: ETag actual del recurso que se desea modificar
+  required: true
+  schema:
+    type: string
+    pattern: "[0-9a-f]*"
+orderParam:
+  name: order
+  in: query
+  description: 'Criterio de ordenación: `id`'
+  required: false
+  allowEmptyValue: false
+  schema:
+    type: string
+    enum:
+      - id
+orderingParam:
+  name: ordering
+  in: query
+  description: 'Ordenación: `ASC` | `DESC`'
+  required: false
+  allowEmptyValue: false
+  schema:
+    type: string
+    enum:
+      - ASC
+      - DESC
+pageParam:
+  name: page
+  in: query
+  description: 'Número de página'
+  required: false
+  allowEmptyValue: false
+  schema:
+    type: integer
+    minimum: 1
